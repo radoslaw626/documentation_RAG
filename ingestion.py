@@ -10,8 +10,11 @@ from langchain_pinecone import PineconeVectorStore
 
 embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
 
+
 def ingest_docs():
-    loader = ReadTheDocsLoader("langchain-docs/api.python.langchain.com/en/latest", encoding='utf8')
+    loader = ReadTheDocsLoader(
+        "langchain-docs/api.python.langchain.com/en/latest", encoding="utf8"
+    )
 
     raw_documents = loader.load()
     print(f"loaded{len(raw_documents)} documents")
@@ -21,6 +24,7 @@ def ingest_docs():
     for doc in documents:
         new_url = doc.metadata["source"]
         new_url = new_url.replace("langchain-docs", "https:/")
+        new_url = new_url.replace("\\", "/")
         doc.metadata.update({"source": new_url})
 
     print(f"Going to add {len(documents)} to Pinecone")
@@ -31,9 +35,5 @@ def ingest_docs():
     print("**** Loading to Vectorstore completed")
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     ingest_docs()
-
-
-
